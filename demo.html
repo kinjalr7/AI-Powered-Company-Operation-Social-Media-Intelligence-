@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Social Intelligence - Dark Theme Demo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --bg-primary: linear-gradient(135deg, #1e1b4b 0%, #312e81 25%, #1e293b 50%, #0f172a 75%, #020617 100%);
+            --bg-secondary: rgba(30, 41, 59, 0.7);
+            --bg-tertiary: rgba(30, 41, 59, 0.5);
+            --text-primary: #ffffff;
+            --text-secondary: #e2e8f0;
+            --text-muted: #94a3b8;
+            --border-primary: rgba(148, 163, 184, 0.2);
+            --border-secondary: rgba(71, 85, 105, 0.3);
+            --nav-bg: rgba(15, 23, 42, 0.95);
+            --card-bg: rgba(30, 41, 59, 0.7);
+        }
+
+        .light-theme {
+            --bg-primary: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 25%, #cbd5e1 50%, #94a3b8 75%, #64748b 100%);
+            --bg-secondary: rgba(255, 255, 255, 0.9);
+            --bg-tertiary: rgba(241, 245, 249, 0.8);
+            --text-primary: #1e293b;
+            --text-secondary: #475569;
+            --text-muted: #64748b;
+            --border-primary: rgba(148, 163, 184, 0.3);
+            --border-secondary: rgba(71, 85, 105, 0.4);
+            --nav-bg: rgba(255, 255, 255, 0.95);
+            --card-bg: rgba(255, 255, 255, 0.9);
+        }
+
+        body {
+            background: var(--bg-primary);
+            min-height: 100vh;
+            font-family: 'Inter', system-ui, sans-serif;
+            color: var(--text-primary);
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .glass-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border-primary);
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        .chart-container {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-secondary);
+            border-radius: 8px;
+            padding: 20px;
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+    </style>
+</head>
+<body class="text-white">
+    <!-- Navigation -->
+    <nav class="backdrop-blur-md border-b border-slate-700/50 sticky top-0 z-50 transition-all duration-300" style="background: var(--nav-bg); border-color: var(--border-primary);">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="bg-gradient-to-r from-blue-500 to-purple-600 p-2 rounded-lg">
+                        <svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                        </svg>
+                    </div>
+                    <span class="ml-2 text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                        AI Social Intelligence
+                    </span>
+                </div>
+                <div class="flex items-center space-x-8">
+                    <a href="#" class="transition-colors hover:text-blue-400" style="color: var(--text-secondary);">Dashboard</a>
+                    <a href="#" class="transition-colors hover:text-blue-400" style="color: var(--text-secondary);">Analytics</a>
+                    <a href="#" class="transition-colors hover:text-blue-400" style="color: var(--text-secondary);">Reports</a>
+                    <button id="theme-toggle" class="p-2 rounded-lg backdrop-blur-sm transition-all duration-300 border" style="background: var(--bg-secondary); border-color: var(--border-primary); color: var(--text-secondary);">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative overflow-hidden py-20 sm:py-32">
+        <div class="absolute inset-0 bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-purple-600/20" />
+        <div class="relative mx-auto max-w-7xl px-6 lg:px-8">
+            <div class="mx-auto max-w-4xl text-center">
+                <div class="mb-8">
+                    <div class="inline-flex items-center px-4 py-2 rounded-full bg-gradient-to-r from-blue-500/20 to-purple-500/20 border border-blue-400/30 text-blue-200 backdrop-blur-sm">
+                        <svg class="mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                        </svg>
+                        Powered by AI & Machine Learning
+                    </div>
+                </div>
+
+                <h1 class="text-4xl font-bold tracking-tight sm:text-6xl lg:text-7xl">
+                    AI Social Media
+                    <span class="block bg-gradient-to-r from-blue-400 via-purple-400 to-purple-500 bg-clip-text text-transparent drop-shadow-lg">
+                        Intelligence System
+                    </span>
+                </h1>
+
+                <p class="mx-auto mt-6 max-w-2xl text-lg leading-8 transition-colors" style="color: var(--text-secondary);">
+                    Transform your business operations with AI-powered social media monitoring,
+                    real-time analytics, and automated intelligence reports.
+                </p>
+
+                <div class="mt-10 flex items-center justify-center gap-x-6">
+                    <button class="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-8 py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl shadow-blue-500/25 hover:shadow-blue-500/40 border border-blue-400/30 backdrop-blur-sm">
+                        Get Started
+                    </button>
+                    <button class="border border-slate-600 text-slate-300 hover:bg-slate-800/50 hover:text-white px-8 py-3 rounded-lg font-semibold backdrop-blur-sm transition-all duration-300">
+                        Watch Demo
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="py-16 bg-slate-900/50 backdrop-blur-sm border-y border-slate-700/50">
+        <div class="mx-auto max-w-7xl px-6 lg:px-8">
+            <div class="grid grid-cols-2 gap-8 md:grid-cols-4">
+                <div class="text-center">
+                    <div class="text-3xl font-bold text-white md:text-4xl bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                        10K+
+                    </div>
+                    <div class="mt-2 text-sm text-blue-300/80 md:text-base">
+                        Social Posts Analyzed
+                    </div>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl font-bold text-white md:text-4xl bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                        95%
+                    </div>
+                    <div class="mt-2 text-sm text-purple-300/80 md:text-base">
+                        Accuracy Rate
+                    </div>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl font-bold text-white md:text-4xl bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                        24/7
+                    </div>
+                    <div class="mt-2 text-sm text-blue-400/80 md:text-base">
+                        Real-Time Monitoring
+                    </div>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl font-bold text-white md:text-4xl bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                        500+
+                    </div>
+                    <div class="mt-2 text-sm text-purple-400/80 md:text-base">
+                        Companies Served
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="py-20 bg-slate-800/20 backdrop-blur-sm">
+        <div class="mx-auto max-w-7xl px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold sm:text-4xl bg-gradient-to-r from-blue-300 via-purple-300 to-blue-300 bg-clip-text text-transparent">
+                    Powerful Features for Modern Businesses
+                </h2>
+                <p class="mt-4 text-lg transition-colors" style="color: var(--text-muted);">
+                    Everything you need to <span class="text-purple-400/80">monitor</span>, <span class="text-blue-400/80">analyze</span>, and <span class="text-purple-500/80">act</span> on social media intelligence
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+                <div class="glass-card p-6 rounded-lg hover:scale-105 transition-all duration-300">
+                    <div class="inline-flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-r from-slate-700 to-slate-600 border border-slate-600/30 backdrop-blur-sm mb-4">
+                        <svg class="h-6 w-6 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-white text-lg font-semibold mb-2">AI-Powered Analytics</h3>
+                    <p style="color: var(--text-secondary);">
+                        Advanced NLP and sentiment analysis for deep insights into social media conversations.
+                    </p>
+                </div>
+
+                <div class="glass-card p-6 rounded-lg hover:scale-105 transition-all duration-300">
+                    <div class="inline-flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-r from-slate-700 to-slate-600 border border-slate-600/30 backdrop-blur-sm mb-4">
+                        <svg class="h-6 w-6 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                        </svg>
+                    </div>
+                    <h3 class="text-white text-lg font-semibold mb-2">Real-Time Monitoring</h3>
+                    <p style="color: var(--text-secondary);">
+                        Live tracking of social media trends, engagement metrics, and brand mentions.
+                    </p>
+                </div>
+
+                <div class="glass-card p-6 rounded-lg hover:scale-105 transition-all duration-300">
+                    <div class="inline-flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-r from-slate-700 to-slate-600 border border-slate-600/30 backdrop-blur-sm mb-4">
+                        <svg class="h-6 w-6 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-white text-lg font-semibold mb-2">Hiring Intelligence</h3>
+                    <p class="text-slate-300">
+                        Track tech skills demand, company culture insights, and recruitment trends.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sample Chart Section -->
+    <section class="py-20 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900">
+        <div class="mx-auto max-w-4xl px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold mb-4 bg-gradient-to-r from-blue-400 via-purple-400 to-blue-400 bg-clip-text text-transparent">Sample Analytics Dashboard</h2>
+                <p class="text-slate-400">Interactive charts with <span class="text-blue-300/80">unified blue-purple theme</span> styling</p>
+            </div>
+
+            <div class="chart-container">
+                <h3 class="text-white text-lg font-semibold mb-4 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">Sentiment Trend Analysis</h3>
+                <div class="h-64 bg-gradient-to-r from-blue-900/20 via-purple-900/20 to-purple-900/20 rounded-lg flex items-center justify-center border border-slate-600/30">
+                    <div class="text-center">
+                        <svg class="w-16 h-16 text-blue-400 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                        </svg>
+                        <p class="text-slate-300">Interactive Chart Area</p>
+                        <p class="text-purple-200/70 text-sm mt-1">Unified blue-purple analytics theme</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900/80 backdrop-blur-md border-t border-slate-700 py-12">
+        <div class="mx-auto max-w-7xl px-6 lg:px-8 text-center">
+            <div class="flex items-center justify-center mb-4">
+                <div class="bg-gradient-to-r from-blue-500 to-purple-600 p-2 rounded-lg mr-3">
+                    <svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                    </svg>
+                </div>
+                <span class="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                    AI Social Intelligence
+                </span>
+            </div>
+            <p class="text-slate-400">
+                Modern AI-powered social media intelligence platform with beautiful dark theme design.
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Theme management
+        const themeToggle = document.getElementById('theme-toggle');
+        const htmlElement = document.documentElement;
+        const themeIcon = themeToggle.querySelector('svg');
+
+        // Check for saved theme preference or default to dark
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        if (savedTheme === 'light') {
+            htmlElement.classList.add('light-theme');
+            updateThemeIcon(true);
+        }
+
+        // Theme toggle functionality
+        themeToggle.addEventListener('click', () => {
+            const isLight = htmlElement.classList.contains('light-theme');
+
+            if (isLight) {
+                htmlElement.classList.remove('light-theme');
+                localStorage.setItem('theme', 'dark');
+                updateThemeIcon(false);
+            } else {
+                htmlElement.classList.add('light-theme');
+                localStorage.setItem('theme', 'light');
+                updateThemeIcon(true);
+            }
+        });
+
+        function updateThemeIcon(isLight) {
+            if (isLight) {
+                // Moon icon for dark mode toggle
+                themeIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>';
+            } else {
+                // Sun icon for light mode toggle
+                themeIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>';
+            }
+        }
+
+        // Add some interactive effects
+        document.querySelectorAll('.glass-card').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'scale(1.05)';
+                card.style.boxShadow = '0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.1)';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'scale(1)';
+                card.style.boxShadow = '';
+            });
+        });
+    </script>
+</body>
+</html>

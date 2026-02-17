@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Social Intelligence - Redirecting...</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 25%, #1e293b 50%, #0f172a 75%, #020617 100%);
+            color: white;
+            font-family: 'Inter', system-ui, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            text-align: center;
+        }
+        .logo {
+            font-size: 3rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, #3b82f6, #8b5cf6, #7c3aed);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 2rem;
+        }
+        .message {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            opacity: 0.8;
+        }
+        .button {
+            background: linear-gradient(45deg, #3b82f6, #8b5cf6);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+        .button:hover {
+            transform: scale(1.05);
+        }
+        .loading {
+            margin-top: 2rem;
+        }
+        .loading::after {
+            content: '';
+            animation: loading 1.5s infinite;
+        }
+        @keyframes loading {
+            0%, 100% { content: ''; }
+            25% { content: '.'; }
+            50% { content: '..'; }
+            75% { content: '...'; }
+        }
+    </style>
+    <script>
+        // Auto-redirect to demo after a short delay
+        setTimeout(() => {
+            window.location.href = '/demo.html';
+        }, 2000);
+    </script>
+</head>
+<body>
+    <div class="logo">AI Social Intelligence</div>
+    <div class="message">Your stunning dark theme website is loading...</div>
+    <a href="/demo.html" class="button">View Demo Now</a>
+    <div class="loading">Loading</div>
+</body>
+</html>

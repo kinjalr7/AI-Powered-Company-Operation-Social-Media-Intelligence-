@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Social Intelligence - Demo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/framer-motion@10.16.16/dist/framer-motion.js"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .animate-gradient {
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .floating-animation {
+            animation: floating 3s ease-in-out infinite;
+        }
+
+        @keyframes floating {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .pulse-glow {
+            animation: pulse-glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes pulse-glow {
+            from { box-shadow: 0 0 20px rgba(59, 130, 246, 0.5); }
+            to { box-shadow: 0 0 30px rgba(59, 130, 246, 0.8); }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-white">
+    <div id="app">
+        <!-- Landing Page -->
+        <div id="landing" class="min-h-screen">
+            <!-- Hero Section -->
+            <section class="relative overflow-hidden py-20 sm:py-32">
+                <div class="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20 animate-gradient"></div>
+                <div class="relative mx-auto max-w-7xl px-6 lg:px-8">
+                    <div class="mx-auto max-w-4xl text-center">
+                        <div class="mb-8">
+                            <span class="inline-flex items-center rounded-full bg-blue-500/10 px-4 py-2 text-sm font-medium text-blue-400 ring-1 ring-blue-500/20">
+                                <svg class="mr-2 h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"></path>
+                                </svg>
+                                Powered by AI & Machine Learning
+                            </span>
+                        </div>
+
+                        <h1 class="text-4xl font-bold tracking-tight sm:text-6xl lg:text-7xl">
+                            AI Social Media
+                            <span class="block bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">
+                                Intelligence System
+                            </span>
+                        </h1>
+
+                        <p class="mx-auto mt-6 max-w-2xl text-lg leading-8 text-gray-300">
+                            Transform your business operations with AI-powered social media monitoring,
+                            real-time analytics, and automated intelligence reports.
+                        </p>
+
+                        <div class="mt-10 flex items-center justify-center gap-x-6">
+                            <button onclick="showLogin()" class="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
+                                Get Started
+                                <svg class="ml-2 h-5 w-5 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                </svg>
+                            </button>
+                            <button onclick="showDemo()" class="border border-gray-600 text-gray-300 hover:bg-gray-800 px-8 py-3 rounded-lg font-semibold">
+                                View Demo
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Stats Section -->
+            <section class="py-16 bg-black/20">
+                <div class="mx-auto max-w-7xl px-6 lg:px-8">
+                    <div class="grid grid-cols-2 gap-8 md:grid-cols-4">
+                        <div class="text-center">
+                            <div class="text-3xl font-bold text-white md:text-4xl">10K+</div>
+                            <div class="mt-2 text-sm text-gray-400 md:text-base">Posts Analyzed</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-3xl font-bold text-white md:text-4xl">95%</div>
+                            <div class="mt-2 text-sm text-gray-400 md:text-base">Accuracy Rate</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-3xl font-bold text-white md:text-4xl">24/7</div>
+                            <div class="mt-2 text-sm text-gray-400 md:text-base">Real-Time Monitoring</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-3xl font-bold text-white md:text-4xl">500+</div>
+                            <div class="mt-2 text-sm text-gray-400 md:text-base">Companies Served</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Login Page -->
+        <div id="login" class="hidden min-h-screen flex items-center justify-center p-4">
+            <div class="w-full max-w-md">
+                <div class="bg-gray-900/90 border border-gray-700 shadow-2xl backdrop-blur-sm rounded-lg p-8">
+                    <div class="text-center pb-8">
+                        <div class="mx-auto mb-4 h-16 w-16 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center">
+                            <svg class="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                            </svg>
+                        </div>
+                        <h2 class="text-3xl font-bold text-white">Welcome Back</h2>
+                        <p class="text-gray-400 text-lg">Sign in to access your dashboard</p>
+                    </div>
+
+                    <form onsubmit="handleLogin(event)" class="space-y-4">
+                        <div class="space-y-2">
+                            <label class="text-gray-300 text-sm font-medium">Email</label>
+                            <div class="relative">
+                                <svg class="absolute left-3 top-3 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"></path>
+                                </svg>
+                                <input id="email" type="email" placeholder="Enter your email" required
+                                       class="w-full pl-10 pr-3 py-3 bg-gray-800 border border-gray-600 text-white placeholder-gray-400 rounded-lg focus:border-blue-500 focus:outline-none">
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-gray-300 text-sm font-medium">Password</label>
+                            <div class="relative">
+                                <svg class="absolute left-3 top-3 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                                </svg>
+                                <input id="password" type="password" placeholder="Enter your password" required
+                                       class="w-full pl-10 pr-3 py-3 bg-gray-800 border border-gray-600 text-white placeholder-gray-400 rounded-lg focus:border-blue-500 focus:outline-none">
+                            </div>
+                        </div>
+                        <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105">
+                            Sign In
+                        </button>
+                    </form>
+
+                    <div class="text-center mt-6">
+                        <button onclick="showLanding()" class="text-blue-400 hover:text-blue-300 font-semibold">
+                            ← Back to Home
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Demo -->
+        <div id="dashboard" class="hidden min-h-screen bg-gray-900">
+            <div class="flex h-screen">
+                <!-- Sidebar -->
+                <div class="w-64 bg-gray-800 shadow-lg">
+                    <div class="p-6">
+                        <h2 class="text-xl font-bold text-white">AI Social Intelligence</h2>
+                    </div>
+                    <nav class="mt-6">
+                        <a href="#" onclick="showDashboard()" class="flex items-center px-6 py-3 text-white bg-blue-600">
+                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                            </svg>
+                            Dashboard
+                        </a>
+                        <a href="#" onclick="showAnalytics()" class="flex items-center px-6 py-3 text-gray-300 hover:text-white hover:bg-gray-700">
+                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V8a2 2 0 00-2-2H6a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                            </svg>
+                            Analytics
+                        </a>
+                        <a href="#" onclick="showReports()" class="flex items-center px-6 py-3 text-gray-300 hover:text-white hover:bg-gray-700">
+                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                            Reports
+                        </a>
+                    </nav>
+                </div>
+
+                <!-- Main Content -->
+                <div class="flex-1 overflow-hidden">
+                    <header class="bg-gray-800 shadow-sm px-6 py-4">
+                        <h1 class="text-2xl font-bold text-white">Dashboard</h1>
+                        <button onclick="showLanding()" class="mt-2 text-blue-400 hover:text-blue-300">← Back to Home</button>
+                    </header>
+
+                    <main class="p-6 overflow-y-auto h-full pb-20">
+                        <!-- Stats Cards -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                            <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
+                                <div class="flex items-center">
+                                    <div class="p-2 bg-blue-500 rounded-lg">
+                                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                                        </svg>
+                                    </div>
+                                    <div class="ml-4">
+                                        <p class="text-gray-400 text-sm">Total Posts</p>
+                                        <p class="text-2xl font-bold text-white" id="totalPosts">1,247</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
+                                <div class="flex items-center">
+                                    <div class="p-2 bg-green-500 rounded-lg">
+                                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                        </svg>
+                                    </div>
+                                    <div class="ml-4">
+                                        <p class="text-gray-400 text-sm">Positive Sentiment</p>
+                                        <p class="text-2xl font-bold text-white" id="positiveSentiment">68%</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
+                                <div class="flex items-center">
+                                    <div class="p-2 bg-purple-500 rounded-lg">
+                                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                                        </svg>
+                                    </div>
+                                    <div class="ml-4">
+                                        <p class="text-gray-400 text-sm">Engagement</p>
+                                        <p class="text-2xl font-bold text-white" id="engagement">12.5K</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
+                                <div class="flex items-center">
+                                    <div class="p-2 bg-orange-500 rounded-lg">
+                                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                                        </svg>
+                                    </div>
+                                    <div class="ml-4">
+                                        <p class="text-gray-400 text-sm">Active Topics</p>
+                                        <p class="text-2xl font-bold text-white" id="activeTopics">24</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Charts Placeholder -->
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                            <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
+                                <h3 class="text-lg font-semibold text-white mb-4">Sentiment Trends</h3>
+                                <div class="h-64 bg-gray-700 rounded-lg flex items-center justify-center">
+                                    <span class="text-gray-400">Chart will load here</span>
+                                </div>
+                            </div>
+
+                            <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
+                                <h3 class="text-lg font-semibold text-white mb-4">Platform Distribution</h3>
+                                <div class="h-64 bg-gray-700 rounded-lg flex items-center justify-center">
+                                    <span class="text-gray-400">Chart will load here</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Recent Posts -->
+                        <div class="bg-gray-800 rounded-lg border border-gray-700">
+                            <div class="p-6 border-b border-gray-700">
+                                <h3 class="text-lg font-semibold text-white">Recent Posts</h3>
+                            </div>
+                            <div class="divide-y divide-gray-700" id="recentPosts">
+                                <!-- Posts will be loaded here -->
+                            </div>
+                        </div>
+                    </main>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Navigation functions
+        function showLanding() {
+            document.getElementById('landing').classList.remove('hidden');
+            document.getElementById('login').classList.add('hidden');
+            document.getElementById('dashboard').classList.add('hidden');
+        }
+
+        function showLogin() {
+            document.getElementById('landing').classList.add('hidden');
+            document.getElementById('login').classList.remove('hidden');
+            document.getElementById('dashboard').classList.add('hidden');
+        }
+
+        function showDashboard() {
+            document.getElementById('landing').classList.add('hidden');
+            document.getElementById('login').classList.add('hidden');
+            document.getElementById('dashboard').classList.remove('hidden');
+            loadDashboardData();
+        }
+
+        function showDemo() {
+            showDashboard();
+        }
+
+        function showAnalytics() {
+            alert('Analytics page would load here');
+        }
+
+        function showReports() {
+            alert('Reports page would load here');
+        }
+
+        // Handle login
+        async function handleLogin(event) {
+            event.preventDefault();
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const response = await fetch('http://localhost:8000/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+
+                if (response.ok) {
+                    showDashboard();
+                } else {
+                    alert('Login failed. This is a demo - try any email/password');
+                }
+            } catch (error) {
+                console.log('Backend not available, showing demo anyway');
+                showDashboard();
+            }
+        }
+
+        // Load dashboard data
+        async function loadDashboardData() {
+            try {
+                const response = await fetch('http://localhost:8000/api/analytics/dashboard');
+                const data = await response.json();
+
+                // Update stats
+                document.getElementById('totalPosts').textContent = data.insights.total_posts.toLocaleString();
+                document.getElementById('positiveSentiment').textContent = Math.round((data.insights.sentiment_distribution.positive / data.insights.total_posts) * 100) + '%';
+                document.getElementById('engagement').textContent = data.insights.total_engagement.toLocaleString();
+                document.getElementById('activeTopics').textContent = data.insights.top_topics.length;
+
+                // Update recent posts
+                const postsContainer = document.getElementById('recentPosts');
+                postsContainer.innerHTML = '';
+
+                data.recent_posts.slice(0, 5).forEach(post => {
+                    const postElement = document.createElement('div');
+                    postElement.className = 'p-4 hover:bg-gray-700 transition-colors';
+                    postElement.innerHTML = `
+                        <div class="flex items-start space-x-3">
+                            <div class="flex-shrink-0">
+                                <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+                                    <span class="text-xs font-medium text-white">${post.platform[0].toUpperCase()}</span>
+                                </div>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-sm text-white truncate">${post.content}</p>
+                                <div class="flex items-center space-x-4 mt-1">
+                                    <span class="text-xs text-gray-400">${post.platform}</span>
+                                    <span class="text-xs text-${post.sentiment === 'positive' ? 'green' : post.sentiment === 'negative' ? 'red' : 'gray'}-400">${post.sentiment}</span>
+                                    <span class="text-xs text-gray-400">${post.engagement} engagement</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    postsContainer.appendChild(postElement);
+                });
+
+            } catch (error) {
+                console.log('Backend not available, showing demo data');
+                // Show demo data
+                document.getElementById('totalPosts').textContent = '1,247';
+                document.getElementById('positiveSentiment').textContent = '68%';
+                document.getElementById('engagement').textContent = '12.5K';
+                document.getElementById('activeTopics').textContent = '24';
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            showLanding();
+        });
+    </script>
+</body>
+</html>
