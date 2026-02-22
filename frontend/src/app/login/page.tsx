@@ -27,6 +27,7 @@ const plans = [
     id: "free",
     name: "Free",
     price: 0,
+    yearlyPrice: 0,
     description: "Perfect for getting started",
     features: [
       "5 social accounts monitoring",
@@ -34,19 +35,15 @@ const plans = [
       "Weekly reports",
       "Community support"
     ],
-    limits: {
-      socialAccounts: 5,
-      reports: 1,
-      apiCalls: 1000,
-      storage: "1GB"
-    },
     icon: Users,
-    color: "from-blue-500 to-cyan-500"
+    color: "from-blue-500 to-cyan-500",
+    buttonColor: "from-blue-500 to-cyan-500"
   },
   {
     id: "pro",
     name: "Pro",
     price: 29,
+    yearlyPrice: 24,
     description: "Advanced analytics for growing businesses",
     features: [
       "25 social accounts monitoring",
@@ -56,20 +53,17 @@ const plans = [
       "Real-time alerts",
       "Custom dashboards"
     ],
-    limits: {
-      socialAccounts: 25,
-      reports: 7,
-      apiCalls: 10000,
-      storage: "10GB"
-    },
+    trial: true,
+    popular: true,
     icon: TrendingUp,
     color: "from-purple-500 to-pink-500",
-    popular: true
+    buttonColor: "from-purple-500 to-pink-500"
   },
   {
     id: "enterprise",
     name: "Enterprise",
     price: 99,
+    yearlyPrice: 79,
     description: "Full-suite solution for large organizations",
     features: [
       "Unlimited social accounts",
@@ -80,14 +74,9 @@ const plans = [
       "Advanced security",
       "Multi-user access"
     ],
-    limits: {
-      socialAccounts: -1, // unlimited
-      reports: -1, // unlimited
-      apiCalls: -1, // unlimited
-      storage: "Unlimited"
-    },
     icon: Database,
-    color: "from-orange-500 to-red-500"
+    color: "from-orange-500 to-red-500",
+    buttonColor: "from-orange-500 to-red-500"
   }
 ];
 
@@ -97,6 +86,7 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isYearly, setIsYearly] = useState(false);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -119,11 +109,12 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-black via-gray-900 to-black">
-      <div className="w-full max-w-4xl">
+      <div className="w-full max-w-6xl">
         <AnimatePresence mode="wait">
           {currentStep === "auth" ? (
             <motion.div
               key="auth"
+              className="max-w-md mx-auto"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
@@ -135,7 +126,7 @@ export default function LoginPage() {
                     initial={{ scale: 0.8 }}
                     animate={{ scale: 1 }}
                     transition={{ duration: 0.5, delay: 0.2 }}
-                    className="mx-auto mb-4 h-16 w-16 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center shadow-lg shadow-blue-500/25"
+                    className="mx-auto mb-4 h-16 w-16 rounded-full bg-gradient-to-r from-blue-500 to-blue-600 flex items-center justify-center shadow-lg shadow-blue-500/25"
                   >
                     <Brain className="h-8 w-8 text-white" />
                   </motion.div>
@@ -180,7 +171,7 @@ export default function LoginPage() {
                     </div>
                     <Button
                       type="submit"
-                      className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40"
+                      className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40"
                       disabled={isLoading}
                     >
                       {isLoading ? (
@@ -214,96 +205,98 @@ export default function LoginPage() {
           ) : (
             <motion.div
               key="plans"
+              className="py-10"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.5 }}
             >
-              <div className="text-center mb-8">
-                <motion.div
-                  initial={{ scale: 0.8 }}
-                  animate={{ scale: 1 }}
-                  transition={{ duration: 0.5 }}
-                  className="mx-auto mb-4 h-16 w-16 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center shadow-lg shadow-blue-500/25"
-                >
-                  <Sparkles className="h-8 w-8 text-white" />
-                </motion.div>
-                <h1 className="text-3xl font-bold text-white mb-2">
+              <div className="text-center mb-16">
+                <h1 className="text-5xl font-bold text-white mb-6">
                   Choose Your Plan
                 </h1>
-                <p className="text-slate-400">
+                <p className="text-slate-400 text-xl font-light">
                   Select the perfect plan for your business intelligence needs
                 </p>
+
+                {/* Billing Toggle (Optional enhancement) */}
+                <div className="mt-8 flex items-center justify-center gap-4">
+                  <span className={`text-sm ${!isYearly ? 'text-white font-medium' : 'text-slate-500'}`}>Monthly</span>
+                  <button
+                    onClick={() => setIsYearly(!isYearly)}
+                    className="relative w-12 h-6 rounded-full bg-slate-700 transition-colors focus:outline-none"
+                  >
+                    <div className={`absolute top-1 left-1 w-4 h-4 rounded-full bg-white transition-transform ${isYearly ? 'translate-x-6' : ''}`} />
+                  </button>
+                  <span className={`text-sm ${isYearly ? 'text-white font-medium' : 'text-slate-500'}`}>Yearly (Save 20%)</span>
+                </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch max-w-7xl mx-auto px-4">
                 {plans.map((plan, index) => (
                   <motion.div
                     key={plan.id}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: index * 0.1 }}
+                    className="relative"
                   >
+                    {plan.popular && (
+                      <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-20">
+                        <span className="bg-gradient-to-r from-purple-500 to-pink-500 text-white text-[11px] font-bold px-4 py-1.5 rounded-full shadow-lg border border-purple-400/20 tracking-wide">
+                          Most Popular
+                        </span>
+                      </div>
+                    )}
+
                     <Card
-                      className={`relative modern-card border border-slate-700/50 shadow-xl cursor-pointer transition-all duration-300 transform hover:scale-105 hover:shadow-2xl hover:shadow-blue-500/10 ${
-                        selectedPlan === plan.id ? "ring-2 ring-blue-400 border-blue-400" : ""
-                      } ${plan.popular ? "neon-border" : ""}`}
+                      className={`h-full bg-slate-900/40 backdrop-blur-xl border border-slate-800 transition-all duration-500 flex flex-col hover:border-slate-700 group ${plan.popular ? "ring-1 ring-blue-500/20 shadow-2xl shadow-blue-500/10" : "shadow-xl"
+                        } ${selectedPlan === plan.id ? "ring-2 ring-blue-500 border-blue-500/50 scale-[1.02]" : ""}`}
                       onClick={() => handlePlanSelection(plan.id)}
                     >
-                      {plan.popular && (
-                        <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                          <Badge className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-3 py-1">
-                            Most Popular
-                          </Badge>
+                      <CardHeader className="text-center pt-10 pb-6 px-6">
+                        <div className={`inline-flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br ${plan.color} mx-auto mb-6 shadow-xl transform group-hover:scale-110 transition-transform duration-300`}>
+                          <plan.icon className="h-7 w-7 text-white" />
                         </div>
-                      )}
-
-                      <CardHeader className="text-center pb-4">
-                        <div className={`inline-flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-r ${plan.color} mx-auto mb-4 shadow-lg`}>
-                          <plan.icon className="h-6 w-6 text-white" />
-                        </div>
-                        <CardTitle className="text-white text-xl">{plan.name}</CardTitle>
-                        <div className="mt-2">
-                          <span className="text-3xl font-bold text-white">
-                            ${plan.price}
+                        <CardTitle className="text-3xl font-bold text-white mb-2">{plan.name}</CardTitle>
+                        <div className="flex items-center justify-center gap-1 mt-4">
+                          <span className="text-5xl font-bold text-white tracking-tighter">
+                            ${isYearly ? plan.yearlyPrice : plan.price}
                           </span>
-                          <span className="text-slate-400 text-sm">/month</span>
+                          <span className="text-slate-500 text-lg">/month</span>
                         </div>
-                        <CardDescription className="text-slate-300 mt-2">
+                        <CardDescription className="text-slate-400 text-lg mt-4 max-w-[240px] mx-auto min-h-[48px]">
                           {plan.description}
                         </CardDescription>
                       </CardHeader>
 
-                      <CardContent className="space-y-4">
-                        <ul className="space-y-3">
+                      <CardContent className="flex-grow flex flex-col px-8 pb-10">
+                        <div className="w-full h-px bg-slate-800/50 mb-8" />
+                        <ul className="space-y-4 mb-10 flex-grow">
                           {plan.features.map((feature, featureIndex) => (
-                            <motion.li
+                            <li
                               key={featureIndex}
-                              initial={{ opacity: 0, x: -20 }}
-                              animate={{ opacity: 1, x: 0 }}
-                              transition={{ duration: 0.3, delay: featureIndex * 0.1 }}
-                              className="flex items-center text-slate-300"
+                              className="flex items-start text-slate-300 group"
                             >
-                              <Check className="h-4 w-4 text-green-400 mr-3 flex-shrink-0" />
-                              {feature}
-                            </motion.li>
+                              <Check className="h-5 w-5 text-green-500 mr-3 mt-0.5 flex-shrink-0 group-hover:scale-110 transition-transform" />
+                              <span className="text-[15px] leading-relaxed group-hover:text-white transition-colors">
+                                {feature}
+                              </span>
+                            </li>
                           ))}
                         </ul>
 
                         <Button
-                          className={`w-full mt-6 bg-gradient-to-r ${plan.color} hover:opacity-90 text-white py-3 rounded-lg font-semibold transition-all duration-300 ${
-                            selectedPlan === plan.id ? "ring-2 ring-white" : ""
-                          }`}
+                          className={`w-full py-7 rounded-xl font-bold text-lg transition-all duration-300 bg-gradient-to-r ${plan.buttonColor} hover:opacity-90 hover:scale-[1.02] shadow-xl text-white`}
                           onClick={(e) => {
                             e.stopPropagation();
                             handlePlanSelection(plan.id);
                           }}
                         >
                           {selectedPlan === plan.id ? (
-                            <>
-                              Selected
-                              <Check className="ml-2 h-5 w-5" />
-                            </>
+                            <span className="flex items-center gap-2">
+                              Selected <Check className="h-6 w-6" />
+                            </span>
                           ) : (
                             "Choose Plan"
                           )}
