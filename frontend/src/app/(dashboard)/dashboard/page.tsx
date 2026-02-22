@@ -410,11 +410,11 @@ export default function DashboardPage() {
           >
             <Card className="bg-slate-800/90 backdrop-blur-md border border-slate-700 shadow-xl hover:shadow-2xl hover:shadow-blue-500/10 transition-all duration-300">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-gray-600">Avg Sentiment</CardTitle>
-                <TrendingUp className="h-4 w-4 text-green-600" />
+                <CardTitle className="text-sm font-medium text-slate-400">Avg Sentiment</CardTitle>
+                <TrendingUp className="h-4 w-4 text-green-400" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-green-600">
+                <div className="text-2xl font-bold text-green-400">
                   {(realtimeData.sentimentDistribution.positive / 100 * 5 + 3).toFixed(1)}/5
                 </div>
                 <Progress
@@ -432,12 +432,12 @@ export default function DashboardPage() {
           >
             <Card className="bg-slate-800/90 backdrop-blur-md border border-slate-700 shadow-xl hover:shadow-2xl hover:shadow-blue-500/10 transition-all duration-300">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-gray-600">Active Platforms</CardTitle>
-                <Users className="h-4 w-4 text-purple-600" />
+                <CardTitle className="text-sm font-medium text-slate-400">Active Platforms</CardTitle>
+                <Users className="h-4 w-4 text-purple-400" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-gray-900">{realtimeData.platformStats.length}</div>
-                <p className="text-xs text-gray-600 mt-1">
+                <div className="text-2xl font-bold text-purple-400">{realtimeData.platformStats.length}</div>
+                <p className="text-xs text-slate-400 mt-1">
                   Twitter, LinkedIn, Facebook, Instagram
                 </p>
               </CardContent>
@@ -544,42 +544,42 @@ export default function DashboardPage() {
                   <ResponsiveContainer width="100%" height="100%">
                     {realtimeData.sentimentTrend && realtimeData.sentimentTrend.length > 0 ? (
                       <AreaChart data={realtimeData.sentimentTrend}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-                    <XAxis dataKey="time" tick={{ fill: '#9CA3AF' }} axisLine={{ stroke: '#4B5563' }} />
-                    <YAxis tick={{ fill: '#9CA3AF' }} axisLine={{ stroke: '#4B5563' }} />
-                    <Tooltip
-                      contentStyle={{
-                        backgroundColor: '#1F2937',
-                        border: '1px solid #374151',
-                        borderRadius: '8px',
-                        color: '#F9FAFB'
-                      }}
-                    />
-                    <Area
-                      type="monotone"
-                      dataKey="positive"
-                      stackId="1"
-                      stroke="#10B981"
-                      fill="#10B981"
-                      fillOpacity={0.4}
-                    />
-                    <Area
-                      type="monotone"
-                      dataKey="neutral"
-                      stackId="1"
-                      stroke="#F59E0B"
-                      fill="#F59E0B"
-                      fillOpacity={0.4}
-                    />
-                    <Area
-                      type="monotone"
-                      dataKey="negative"
-                      stackId="1"
-                      stroke="#EF4444"
-                      fill="#EF4444"
-                      fillOpacity={0.4}
-                      />
-                    </AreaChart>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                        <XAxis dataKey="time" tick={{ fill: '#9CA3AF' }} axisLine={{ stroke: '#4B5563' }} />
+                        <YAxis tick={{ fill: '#9CA3AF' }} axisLine={{ stroke: '#4B5563' }} />
+                        <Tooltip
+                          contentStyle={{
+                            backgroundColor: '#1F2937',
+                            border: '1px solid #374151',
+                            borderRadius: '8px',
+                            color: '#F9FAFB'
+                          }}
+                        />
+                        <Area
+                          type="monotone"
+                          dataKey="positive"
+                          stackId="1"
+                          stroke="#10B981"
+                          fill="#10B981"
+                          fillOpacity={0.4}
+                        />
+                        <Area
+                          type="monotone"
+                          dataKey="neutral"
+                          stackId="1"
+                          stroke="#F59E0B"
+                          fill="#F59E0B"
+                          fillOpacity={0.4}
+                        />
+                        <Area
+                          type="monotone"
+                          dataKey="negative"
+                          stackId="1"
+                          stroke="#EF4444"
+                          fill="#EF4444"
+                          fillOpacity={0.4}
+                        />
+                      </AreaChart>
                     ) : (
                       <div className="flex items-center justify-center h-full text-slate-400">
                         Loading chart data...
@@ -610,19 +610,19 @@ export default function DashboardPage() {
                   <ResponsiveContainer width="100%" height="100%">
                     {realtimeData.platformStats && realtimeData.platformStats.length > 0 ? (
                       <BarChart data={realtimeData.platformStats}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-                    <XAxis dataKey="name" tick={{ fill: '#9CA3AF' }} axisLine={{ stroke: '#4B5563' }} />
-                    <YAxis tick={{ fill: '#9CA3AF' }} axisLine={{ stroke: '#4B5563' }} />
-                    <Tooltip
-                      contentStyle={{
-                        backgroundColor: '#1F2937',
-                        border: '1px solid #374151',
-                        borderRadius: '8px',
-                        color: '#F9FAFB'
-                      }}
-                    />
-                    <Bar dataKey="posts" fill="#3B82F6"                       />
-                    </BarChart>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                        <XAxis dataKey="name" tick={{ fill: '#9CA3AF' }} axisLine={{ stroke: '#4B5563' }} />
+                        <YAxis tick={{ fill: '#9CA3AF' }} axisLine={{ stroke: '#4B5563' }} />
+                        <Tooltip
+                          contentStyle={{
+                            backgroundColor: '#1F2937',
+                            border: '1px solid #374151',
+                            borderRadius: '8px',
+                            color: '#F9FAFB'
+                          }}
+                        />
+                        <Bar dataKey="posts" fill="#3B82F6" />
+                      </BarChart>
                     ) : (
                       <div className="flex items-center justify-center h-full text-slate-400">
                         Loading chart data...
@@ -655,35 +655,35 @@ export default function DashboardPage() {
                   <ResponsiveContainer width="100%" height="100%">
                     {realtimeData.sentimentDistribution ? (
                       <PieChart>
-                    <Pie
-                      data={[
-                        { name: 'Positive', value: realtimeData.sentimentDistribution.positive, color: '#10B981' },
-                        { name: 'Neutral', value: realtimeData.sentimentDistribution.neutral, color: '#F59E0B' },
-                        { name: 'Negative', value: realtimeData.sentimentDistribution.negative, color: '#EF4444' }
-                      ]}
-                      cx="50%"
-                      cy="50%"
-                      innerRadius={40}
-                      outerRadius={80}
-                      paddingAngle={5}
-                      dataKey="value"
-                    >
-                      {[
-                        { name: 'Positive', value: realtimeData.sentimentDistribution.positive, color: '#10B981' },
-                        { name: 'Neutral', value: realtimeData.sentimentDistribution.neutral, color: '#F59E0B' },
-                        { name: 'Negative', value: realtimeData.sentimentDistribution.negative, color: '#EF4444' }
-                      ].map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
-                      ))}
-                    </Pie>
-                    <Tooltip
-                      contentStyle={{
-                        backgroundColor: '#1F2937',
-                        border: '1px solid #374151',
-                        borderRadius: '8px',
-                        color: '#F9FAFB'
-                      }}
-                    />
+                        <Pie
+                          data={[
+                            { name: 'Positive', value: realtimeData.sentimentDistribution.positive, color: '#10B981' },
+                            { name: 'Neutral', value: realtimeData.sentimentDistribution.neutral, color: '#F59E0B' },
+                            { name: 'Negative', value: realtimeData.sentimentDistribution.negative, color: '#EF4444' }
+                          ]}
+                          cx="50%"
+                          cy="50%"
+                          innerRadius={40}
+                          outerRadius={80}
+                          paddingAngle={5}
+                          dataKey="value"
+                        >
+                          {[
+                            { name: 'Positive', value: realtimeData.sentimentDistribution.positive, color: '#10B981' },
+                            { name: 'Neutral', value: realtimeData.sentimentDistribution.neutral, color: '#F59E0B' },
+                            { name: 'Negative', value: realtimeData.sentimentDistribution.negative, color: '#EF4444' }
+                          ].map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={entry.color} />
+                          ))}
+                        </Pie>
+                        <Tooltip
+                          contentStyle={{
+                            backgroundColor: '#1F2937',
+                            border: '1px solid #374151',
+                            borderRadius: '8px',
+                            color: '#F9FAFB'
+                          }}
+                        />
                       </PieChart>
                     ) : (
                       <div className="flex items-center justify-center h-full text-slate-400">
@@ -733,11 +733,10 @@ export default function DashboardPage() {
                         <p className="text-xs text-slate-400">{topic.mentions} mentions</p>
                       </div>
                       <Badge
-                        className={`${
-                          topic.sentiment > 0.5 ? 'bg-green-900/50 text-green-300 border border-green-700' :
+                        className={`${topic.sentiment > 0.5 ? 'bg-green-900/50 text-green-300 border border-green-700' :
                           topic.sentiment < -0.2 ? 'bg-red-900/50 text-red-300 border border-red-700' :
-                          'bg-yellow-900/50 text-yellow-300 border border-yellow-700'
-                        }`}
+                            'bg-yellow-900/50 text-yellow-300 border border-yellow-700'
+                          }`}
                       >
                         {(topic.sentiment * 100).toFixed(0)}%
                       </Badge>
