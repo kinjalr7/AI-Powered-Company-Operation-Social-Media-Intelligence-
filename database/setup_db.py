@@ -99,58 +99,19 @@ def initialize_schema(db_config):
         print("✗ Schema file not found. Make sure 'schemas/init.sql' exists.")
         return False
 
-def insert_sample_data(db_config):
-    """Insert sample data for testing"""
-    try:
-        conn = psycopg2.connect(**db_config)
-        cursor = conn.cursor()
-
-        print("Inserting sample data...")
-
-        # Sample users
-        cursor.execute("""
-            INSERT INTO users (email, hashed_password, full_name, plan)
-            VALUES
-                ('demo@example.com', '$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LeA5DoEW5qKhFSr.', 'Demo User', 'pro'),
-                ('admin@example.com', '$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LeA5DoEW5qKhFSr.', 'Admin User', 'enterprise')
-            ON CONFLICT (email) DO NOTHING;
-        """)
-
-        # Sample notification settings
-        cursor.execute("""
-            INSERT INTO notification_settings (user_id, email_reports, keywords)
-            SELECT id, true, '["AI", "machine learning", "technology"]'::jsonb
-            FROM users
-            WHERE email IN ('demo@example.com', 'admin@example.com')
-            ON CONFLICT (user_id) DO NOTHING;
-        """)
-
-        conn.commit()
-        print("✓ Sample data inserted successfully")
-
-        cursor.close()
-        conn.close()
-        return True
-
-    except psycopg2.Error as e:
-        print(f"✗ Error inserting sample data: {e}")
-        return False
-
 def main():
     parser = argparse.ArgumentParser(description='Setup AI Social Intelligence database')
     parser.add_argument('--create-db', action='store_true',
                        help='Create the database if it doesn\'t exist')
     parser.add_argument('--init-schema', action='store_true',
                        help='Initialize the database schema')
-    parser.add_argument('--sample-data', action='store_true',
-                       help='Insert sample data for testing')
     parser.add_argument('--all', action='store_true',
-                       help='Do everything (create DB, init schema, insert sample data)')
+                       help='Do everything (create DB, init schema)')
 
     args = parser.parse_args()
 
     # If no specific args, do everything
-    if not any([args.create_db, args.init_schema, args.sample_data]):
+    if not any([args.create_db, args.init_schema]):
         args.all = True
 
     db_config = get_db_config()
@@ -163,9 +124,6 @@ def main():
 
     if args.all or args.init_schema:
         success &= initialize_schema(db_config)
-
-    if args.all or args.sample_data:
-        success &= insert_sample_data(db_config)
 
     if success:
         print("\n🎉 Database setup completed successfully!")

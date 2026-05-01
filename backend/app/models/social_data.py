@@ -7,32 +7,51 @@ from app.models.user import User
 class SocialPost(Base):
     __tablename__ = "social_posts"
 
-    id = Column(Integer, primary_key=True, index=True)
-    platform = Column(String, nullable=False)  # twitter, linkedin, facebook, instagram
-    post_id = Column(String, unique=True, nullable=False)
+    # Primary key
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    
+    # User association
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    user = relationship(User)
+    
+    # Platform and content
+    platform = Column(String(20), nullable=False)  # twitter, linkedin, facebook, instagram, youtube, tiktok
     content = Column(Text, nullable=False)
-    author = Column(String)
-    author_id = Column(String)
-    url = Column(String)
     posted_at = Column(DateTime(timezone=True), nullable=False)
-    collected_at = Column(DateTime(timezone=True), server_default=func.now())
-
+    
     # Engagement metrics
     likes = Column(Integer, default=0)
-    shares = Column(Integer, default=0)
     comments = Column(Integer, default=0)
-    views = Column(Integer, default=0)
-
+    shares = Column(Integer, default=0)
+    reach = Column(Integer, default=0)
+    
+    # URLs
+    post_url = Column(String(500), nullable=True)
+    raw_url = Column(String(500), nullable=True)  # stores original profile URL when source="real"
+    
+    # Source tracking
+    source = Column(String(10), default="dummy")  # "dummy" or "real"
+    
     # AI Analysis
-    sentiment = Column(String)  # positive, negative, neutral
-    sentiment_score = Column(Float)
-    topics = Column(JSON)  # Array of topics/tags
-    entities = Column(JSON)  # Named entities
+    sentiment_score = Column(Float, nullable=True)
+    sentiment_label = Column(String(10), nullable=True)  # positive, negative, neutral
+    topics = Column(JSON, nullable=True)  # Array of topics/tags
+    summary = Column(Text, nullable=True)
+    
+    # Timestamps
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+    
+    # Legacy fields (kept for backward compatibility)
+    post_id = Column(String, unique=True, nullable=True)
+    author = Column(String, nullable=True)
+    author_id = Column(String, nullable=True)
+    url = Column(String, nullable=True)
+    collected_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=True)
+    views = Column(Integer, default=0)
+    sentiment = Column(String, nullable=True)  # positive, negative, neutral
+    entities = Column(JSON, nullable=True)  # Named entities
     language = Column(String, default="en")
-
-    # Metadata
-    user_id = Column(Integer, ForeignKey("users.id"))
-    user = relationship(User)
 
 class AnalyticsData(Base):
     __tablename__ = "analytics_data"

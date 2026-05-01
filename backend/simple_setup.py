@@ -59,27 +59,7 @@ CREATE TABLE social_posts (
 )
 ''')
 
-# Insert sample user
-cursor.execute('''
-INSERT INTO users (email, hashed_password, full_name, plan)
-VALUES (?, ?, ?, ?)
-''', ('demo@example.com', '$2b$12$demo', 'Demo User', 'pro'))
-
-# Insert sample posts
-posts = [
-    ('twitter', 'sample_1', 'Excited about AI developments! #AI', 'TechUser', 'tech1', 'https://twitter.com/tech1/status/1', '2024-01-01 10:00:00', 45, 12, 8, 234, 'positive', 0.8, '["AI", "technology"]'),
-    ('linkedin', 'sample_2', 'Great insights on machine learning today.', 'DataScientist', 'data1', 'https://linkedin.com/posts/data1', '2024-01-01 08:00:00', 23, 5, 3, 156, 'positive', 0.7, '["machine learning"]'),
-    ('twitter', 'sample_3', 'Privacy concerns with new regulations.', 'PrivacyAdvocate', 'privacy1', 'https://twitter.com/privacy1/status/3', '2024-01-01 06:00:00', 67, 23, 15, 445, 'negative', -0.3, '["privacy", "regulations"]')
-]
-
-for post in posts:
-    cursor.execute('''
-    INSERT INTO social_posts (platform, post_id, content, author, author_id, url, posted_at, likes, shares, comments, views, sentiment, sentiment_score, topics, user_id)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)
-    ''', post)
-
 conn.commit()
 conn.close()
 
 print("✅ Database setup complete!")
-print("Demo login: demo@example.com / demo123")

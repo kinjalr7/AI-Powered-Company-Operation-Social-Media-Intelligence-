@@ -9,6 +9,11 @@ from app.core.database import get_db
 from app.services.auth import verify_token, get_user_by_email
 from app.services.ai_analytics import AIAnalyticsService
 from app.services.social_collector import SocialDataCollector
+from app.services.query_service import (
+    get_post_count,
+    get_sentiment_distribution,
+    get_platform_breakdown
+)
 from app.models.social_data import SocialPost, AnalyticsData
 from app.schemas.social_data import SocialPost as SocialPostSchema, SocialPostCreate
 
@@ -136,63 +141,27 @@ async def get_social_data_stats(
     current_user = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
-    """Get statistics about collected social data"""
+    """Get statistics about collected social data using centralized query service"""
     try:
-        end_date = datetime.utcnow()
-        start_date = end_date - timedelta(days=days)
-
-        # Get post counts by platform
-        platform_stats_result = await db.execute(
-            select(
-                SocialPost.platform,
-                func.count(SocialPost.id).label('count'),
-                func.avg(SocialPost.likes + SocialPost.shares + SocialPost.comments).label('avg_engagement')
-            ).where(
-                and_(
-                    SocialPost.user_id == current_user.id,
-                    SocialPost.posted_at >= start_date,
-                    SocialPost.posted_at <= end_date
+        # Get total post count using centralized query service
+        total_posts = await get_post_count(db, current_user.id, days=days)
+        
+        # Get sentiment distribution using centralized query service
+        sentiment_stats = await get_sentiment_distribution(db, current_user.id, days=days)
+        
+        # Get platform breakdown using centralized query service
+        platform_breakdown = await get_platform_breakdown(db, current_user.id, days=days)
+        
+        platform_stats = {
+            platform: {
+                'count': data['total_posts'],
+                'avg_engagement': round(
+                    data['total_engagement'] / data['total_posts'] if data['total_posts'] > 0 else 0,
+                    2
                 )
-            ).group_by(SocialPost.platform)
-        )
-
-        platform_stats = {}
-        for row in platform_stats_result:
-            platform_stats[row.platform] = {
-                'count': row.count,
-                'avg_engagement': float(row.avg_engagement or 0)
             }
-
-        # Get sentiment distribution
-        sentiment_stats_result = await db.execute(
-            select(
-                SocialPost.sentiment,
-                func.count(SocialPost.id).label('count')
-            ).where(
-                and_(
-                    SocialPost.user_id == current_user.id,
-                    SocialPost.posted_at >= start_date,
-                    SocialPost.posted_at <= end_date,
-                    SocialPost.sentiment.isnot(None)
-                )
-            ).group_by(SocialPost.sentiment)
-        )
-
-        sentiment_stats = {}
-        for row in sentiment_stats_result:
-            sentiment_stats[row.sentiment] = row.count
-
-        # Get total counts
-        total_result = await db.execute(
-            select(func.count(SocialPost.id)).where(
-                and_(
-                    SocialPost.user_id == current_user.id,
-                    SocialPost.posted_at >= start_date,
-                    SocialPost.posted_at <= end_date
-                )
-            )
-        )
-        total_posts = total_result.scalar()
+            for platform, data in platform_breakdown.items()
+        }
 
         return {
             'period': f"{days} days",

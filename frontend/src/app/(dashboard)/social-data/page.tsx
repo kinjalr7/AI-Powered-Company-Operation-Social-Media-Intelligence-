@@ -23,84 +23,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 
-// Mock social media posts data
-const mockPosts = [
-  {
-    id: 1,
-    platform: 'Twitter',
-    author: 'TechInnovator',
-    content: 'Excited about the latest developments in AI and machine learning! The future of technology is looking bright. #AI #Tech #Innovation',
-    postedAt: '2024-01-15T10:30:00Z',
-    likes: 234,
-    shares: 45,
-    comments: 67,
-    sentiment: 'positive',
-    sentimentScore: 0.85,
-    engagement: 346,
-    topics: ['AI Technology', 'Innovation'],
-    url: 'https://twitter.com/example/status/123'
-  },
-  {
-    id: 2,
-    platform: 'LinkedIn',
-    author: 'DataScientistPro',
-    content: 'Just published a new article on advanced sentiment analysis techniques for social media monitoring. The results are fascinating! Link in bio.',
-    postedAt: '2024-01-15T09:15:00Z',
-    likes: 156,
-    shares: 89,
-    comments: 34,
-    sentiment: 'positive',
-    sentimentScore: 0.78,
-    engagement: 279,
-    topics: ['Data Science', 'Sentiment Analysis'],
-    url: 'https://linkedin.com/posts/example'
-  },
-  {
-    id: 3,
-    platform: 'Facebook',
-    author: 'BusinessInsights',
-    content: 'Concerned about data privacy regulations and how they might impact our ability to leverage customer insights effectively.',
-    postedAt: '2024-01-15T08:45:00Z',
-    likes: 98,
-    shares: 23,
-    comments: 45,
-    sentiment: 'negative',
-    sentimentScore: -0.32,
-    engagement: 166,
-    topics: ['Data Privacy', 'Business Intelligence'],
-    url: 'https://facebook.com/posts/example'
-  },
-  {
-    id: 4,
-    platform: 'Instagram',
-    author: 'StartupFounder',
-    content: 'Amazing growth in our AI-powered analytics platform! User engagement up 40% this quarter. Grateful for the amazing team! 🚀 #Startups #AI',
-    postedAt: '2024-01-15T07:20:00Z',
-    likes: 445,
-    shares: 67,
-    comments: 89,
-    sentiment: 'positive',
-    sentimentScore: 0.92,
-    engagement: 601,
-    topics: ['AI Technology', 'Business Growth'],
-    url: 'https://instagram.com/p/example'
-  },
-  {
-    id: 5,
-    platform: 'Twitter',
-    author: 'IndustryAnalyst',
-    content: 'Mixed feelings about the current state of digital transformation initiatives. Some companies are excelling while others are struggling to keep up.',
-    postedAt: '2024-01-14T16:30:00Z',
-    likes: 123,
-    shares: 34,
-    comments: 56,
-    sentiment: 'neutral',
-    sentimentScore: 0.05,
-    engagement: 213,
-    topics: ['Digital Transformation', 'Business Strategy'],
-    url: 'https://twitter.com/example/status/456'
-  }
-];
+
 
 const getSentimentIcon = (sentiment: string) => {
   switch (sentiment) {
@@ -141,13 +64,36 @@ const getPlatformIcon = (platform: string) => {
 };
 
 export default function SocialDataPage() {
-  const [posts, setPosts] = useState(mockPosts);
-  const [filteredPosts, setFilteredPosts] = useState(mockPosts);
+  const [posts, setPosts] = useState([]);
+  const [filteredPosts, setFilteredPosts] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [platformFilter, setPlatformFilter] = useState('all');
   const [sentimentFilter, setSentimentFilter] = useState('all');
   const [sortBy, setSortBy] = useState('engagement');
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetchPosts();
+  }, []);
+
+  const fetchPosts = async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      const response = await fetch('/api/social-data/posts');
+      if (!response.ok) {
+        throw new Error('Failed to fetch posts');
+      }
+      const data = await response.json();
+      setPosts(data || []);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred');
+      setPosts([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
     let filtered = posts.filter(post => {
@@ -180,9 +126,7 @@ export default function SocialDataPage() {
   }, [posts, searchTerm, platformFilter, sentimentFilter, sortBy]);
 
   const refreshData = () => {
-    setIsLoading(true);
-    // Simulate API call
-    setTimeout(() => setIsLoading(false), 1000);
+    fetchPosts();
   };
 
   const exportData = () => {
@@ -458,15 +402,19 @@ export default function SocialDataPage() {
           ))}
         </div>
 
-        {filteredPosts.length === 0 && (
+        {filteredPosts.length === 0 && !isLoading && (
           <div className="text-center py-20 bg-slate-800/50 backdrop-blur-md rounded-2xl border border-slate-700 border-dashed">
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
             >
               <MessageCircle className="w-16 h-16 text-slate-600 mx-auto mb-4" />
-              <h3 className="text-xl font-medium text-white mb-2">No matching intelligence found</h3>
-              <p className="text-slate-500">Try adjusting your cognitive filters or search parameters.</p>
+              <h3 className="text-xl font-medium text-white mb-2">
+                {error ? 'Error loading posts' : 'No posts yet. Add a social account to begin.'}
+              </h3>
+              <p className="text-slate-500">
+                {error ? error : 'Connect your social media accounts to start collecting data.'}
+              </p>
             </motion.div>
           </div>
         )}

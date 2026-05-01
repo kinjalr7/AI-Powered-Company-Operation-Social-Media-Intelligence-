@@ -10,6 +10,11 @@ from app.services.auth import verify_token, get_user_by_email
 from app.services.ai_analytics import AIAnalyticsService
 from app.services.user_social_analytics import UserSocialAnalyticsService
 from app.services.email_service import EmailService
+from app.services.query_service import (
+    get_post_count,
+    get_sentiment_distribution,
+    get_recent_posts
+)
 from app.models.social_data import Report, AnalyticsData, SocialPost
 from app.schemas.social_data import Report as ReportSchema, ReportCreate
 
@@ -40,7 +45,7 @@ async def generate_report(
     current_user = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
-    """Generate a new AI-powered business report"""
+    """Generate a new AI-powered business report using centralized query service"""
     try:
         # Determine date range based on report type
         end_date = datetime.utcnow()
@@ -54,31 +59,29 @@ async def generate_report(
             start_date = report_data.date_range_start or (end_date - timedelta(days=7))
             end_date = report_data.date_range_end or end_date
 
-        # Fetch data for the period
-        posts_result = await db.execute(
-            select(SocialPost).where(
-                and_(
-                    SocialPost.user_id == current_user.id,
-                    SocialPost.posted_at >= start_date,
-                    SocialPost.posted_at <= end_date
-                )
-            )
+        # Get posts using centralized query service
+        recent_posts = await get_recent_posts(
+            db,
+            current_user.id,
+            limit=1000,
+            days=None  # Use explicit date range instead
         )
-        posts = posts_result.scalars().all()
-
-        # Generate insights
+        
+        # Filter by date range manually since query_service uses days parameter
         posts_data = [
             {
-                'content': post.content,
-                'platform': post.platform,
-                'likes': post.likes,
-                'shares': post.shares,
-                'comments': post.comments,
-                'sentiment': post.sentiment
+                'content': p['content'],
+                'platform': p['platform'],
+                'likes': p['likes'],
+                'shares': p['shares'],
+                'comments': p['comments'],
+                'sentiment': p['sentiment_label']
             }
-            for post in posts
+            for p in recent_posts
+            if p['posted_at'] and start_date.isoformat() <= p['posted_at'] <= end_date.isoformat()
         ]
 
+        # Generate insights
         insights = ai_service.generate_insights(posts_data)
 
         # Generate AI report

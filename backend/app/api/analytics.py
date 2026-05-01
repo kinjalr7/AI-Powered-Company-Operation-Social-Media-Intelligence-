@@ -8,6 +8,13 @@ from datetime import datetime, timedelta
 from app.core.database import get_db
 from app.services.auth import verify_token, get_user_by_email
 from app.services.ai_analytics import AIAnalyticsService
+from app.services.query_service import (
+    get_post_count,
+    get_sentiment_distribution,
+    get_recent_posts,
+    get_platform_breakdown,
+    get_sentiment_by_platform
+)
 from app.models.social_data import SocialPost, AnalyticsData
 from app.schemas.social_data import AnalyticsData as AnalyticsDataSchema, SocialPost as SocialPostSchema
 
@@ -127,73 +134,38 @@ async def get_sentiment_analysis(
     current_user = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
-    """Get detailed sentiment analysis"""
+    """Get detailed sentiment analysis - uses centralized query service"""
     try:
-        end_date = datetime.utcnow()
-        start_date = end_date - timedelta(days=days)
-
-        # Build query
-        query = select(SocialPost).where(
-            and_(
-                SocialPost.user_id == current_user.id,
-                SocialPost.posted_at >= start_date,
-                SocialPost.posted_at <= end_date
-            )
+        # Use centralized query service for sentiment distribution
+        sentiment_dist = await get_sentiment_distribution(
+            db,
+            current_user.id,
+            platform=platform,
+            days=days
         )
-
-        if platform:
-            query = query.where(SocialPost.platform == platform)
-
-        result = await db.execute(query.order_by(desc(SocialPost.posted_at)))
-        posts = result.scalars().all()
-
-        # Analyze sentiment for posts that don't have it
-        sentiment_data = []
-        for post in posts:
-            if not post.sentiment:
-                # Analyze sentiment if not already done
-                analysis = ai_service.analyze_sentiment(post.content)
-                post.sentiment = analysis['sentiment']
-                post.sentiment_score = analysis['scores']['vader']['compound']
-                db.add(post)
-
-            sentiment_data.append({
-                'date': post.posted_at.date().isoformat(),
-                'sentiment': post.sentiment,
-                'score': post.sentiment_score,
-                'platform': post.platform,
-                'engagement': post.likes + post.shares + post.comments
-            })
-
-        await db.commit()
-
-        # Aggregate by date
-        daily_sentiment = {}
-        for item in sentiment_data:
-            date = item['date']
-            if date not in daily_sentiment:
-                daily_sentiment[date] = {
-                    'positive': 0,
-                    'negative': 0,
-                    'neutral': 0,
-                    'total': 0,
-                    'avg_score': 0
-                }
-
-            daily_sentiment[date][item['sentiment']] += 1
-            daily_sentiment[date]['total'] += 1
-            daily_sentiment[date]['avg_score'] += item['score']
-
-        # Calculate averages
-        for date_data in daily_sentiment.values():
-            if date_data['total'] > 0:
-                date_data['avg_score'] /= date_data['total']
+        
+        # Get total post count
+        total_posts = await get_post_count(
+            db,
+            current_user.id,
+            platform=platform,
+            days=days
+        )
+        
+        # Get sentiment by platform if no specific platform filter
+        platform_breakdown = {}
+        if not platform:
+            platform_breakdown = await get_sentiment_by_platform(
+                db,
+                current_user.id,
+                days=days
+            )
 
         return {
             'period': f"{days} days",
-            'total_posts': len(sentiment_data),
-            'daily_sentiment': daily_sentiment,
-            'platform_breakdown': {} if not platform else {platform: len(sentiment_data)}
+            'total_posts': total_posts,
+            'sentiment_distribution': sentiment_dist,
+            'platform_breakdown': platform_breakdown
         }
 
     except Exception as e:
@@ -207,29 +179,30 @@ async def get_topic_analysis(
 ):
     """Get topic analysis and trending keywords"""
     try:
-        end_date = datetime.utcnow()
-        start_date = end_date - timedelta(days=days)
-
-        result = await db.execute(
-            select(SocialPost).where(
-                and_(
-                    SocialPost.user_id == current_user.id,
-                    SocialPost.posted_at >= start_date,
-                    SocialPost.posted_at <= end_date
-                )
-            )
+        # Get recent posts from centralized query service
+        recent_posts = await get_recent_posts(
+            db,
+            current_user.id,
+            limit=1000,
+            days=days
         )
-        posts = result.scalars().all()
+
+        if not recent_posts:
+            return {
+                'period': f"{days} days",
+                'total_posts_analyzed': 0,
+                'topics': []
+            }
 
         # Extract topics from all posts
-        all_content = " ".join([post.content for post in posts])
+        all_content = " ".join([post['content'] for post in recent_posts])
         topics = ai_service.extract_topics(all_content, max_topics=20)
 
         # Analyze topic frequency and sentiment
         topic_analysis = {}
-        for post in posts:
-            post_topics = ai_service.extract_topics(post.content, max_topics=5)
-            sentiment = post.sentiment or ai_service.analyze_sentiment(post.content)['sentiment']
+        for post in recent_posts:
+            post_topics = ai_service.extract_topics(post['content'], max_topics=5)
+            sentiment = post['sentiment_label'] or 'neutral'
 
             for topic in post_topics:
                 if topic not in topic_analysis:
@@ -240,7 +213,8 @@ async def get_topic_analysis(
                     }
 
                 topic_analysis[topic]['count'] += 1
-                topic_analysis[topic]['sentiment_scores'][sentiment] += 1
+                if sentiment in topic_analysis[topic]['sentiment_scores']:
+                    topic_analysis[topic]['sentiment_scores'][sentiment] += 1
 
         # Calculate sentiment distribution for each topic
         for topic_data in topic_analysis.values():
@@ -260,7 +234,7 @@ async def get_topic_analysis(
 
         return {
             'period': f"{days} days",
-            'total_posts_analyzed': len(posts),
+            'total_posts_analyzed': len(recent_posts),
             'topics': [
                 {
                     'topic': topic,

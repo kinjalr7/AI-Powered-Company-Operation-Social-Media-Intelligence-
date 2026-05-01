@@ -1,7 +1,77 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
 from typing import Optional, List, Dict, Any
 from datetime import datetime
+from enum import Enum
 
+# Enums for validation
+class PlatformEnum(str, Enum):
+    TWITTER = "twitter"
+    LINKEDIN = "linkedin"
+    FACEBOOK = "facebook"
+    INSTAGRAM = "instagram"
+    YOUTUBE = "youtube"
+    TIKTOK = "tiktok"
+
+class SourceEnum(str, Enum):
+    DUMMY = "dummy"
+    REAL = "real"
+
+class SentimentEnum(str, Enum):
+    POSITIVE = "positive"
+    NEGATIVE = "negative"
+    NEUTRAL = "neutral"
+
+# SocialPost Schemas
+class SocialPostCreate(BaseModel):
+    """Schema for creating a new social post"""
+    user_id: int
+    platform: PlatformEnum
+    content: str
+    posted_at: datetime
+    likes: int = 0
+    comments: int = 0
+    shares: int = 0
+    reach: int = 0
+    post_url: Optional[str] = None
+    source: SourceEnum = SourceEnum.DUMMY
+    raw_url: Optional[str] = None
+    sentiment_score: Optional[float] = None
+    sentiment_label: Optional[SentimentEnum] = None
+    topics: Optional[List[str]] = None
+    summary: Optional[str] = None
+    
+    @field_validator('sentiment_score')
+    @classmethod
+    def validate_sentiment_score(cls, v):
+        if v is not None and not (-1.0 <= v <= 1.0):
+            raise ValueError('sentiment_score must be between -1.0 and 1.0')
+        return v
+
+class SocialPostResponse(BaseModel):
+    """Schema for returning social post data"""
+    id: int
+    user_id: int
+    platform: str
+    content: str
+    posted_at: datetime
+    likes: int
+    comments: int
+    shares: int
+    reach: int
+    post_url: Optional[str] = None
+    source: str
+    raw_url: Optional[str] = None
+    sentiment_score: Optional[float] = None
+    sentiment_label: Optional[str] = None
+    topics: Optional[List[str]] = None
+    summary: Optional[str] = None
+    created_at: datetime
+    updated_at: datetime
+    
+    class Config:
+        from_attributes = True
+
+# Legacy schemas (kept for backward compatibility)
 class SocialPostBase(BaseModel):
     platform: str
     content: str
@@ -9,15 +79,7 @@ class SocialPostBase(BaseModel):
     url: Optional[str] = None
     posted_at: datetime
 
-class SocialPostCreate(SocialPostBase):
-    post_id: str
-    author_id: Optional[str] = None
-    likes: int = 0
-    shares: int = 0
-    comments: int = 0
-    views: int = 0
-
-class SocialPost(SocialPostBase):
+class SocialPostLegacy(SocialPostBase):
     id: int
     post_id: str
     author_id: Optional[str] = None
