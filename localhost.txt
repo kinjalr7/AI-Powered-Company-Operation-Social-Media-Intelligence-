@@ -1,0 +1,19 @@
+//backend 
+
+# 1) Activate backend venv
+cd /Users/tirthpatel/Documents/team/backend
+source venv/bin/activate
+
+# 2) Install the fixed dependencies
+pip install -r requirements.txt
+
+# 3) Run the backend
+uvicorn app.main:app --reload --port 8001
+
+
+
+frontend
+
+bash start.sh
+
+npm run dev
